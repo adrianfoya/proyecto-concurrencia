@@ -1,5 +1,14 @@
 #include "list.h"
 #include <stddef.h>
+#include <stdlib.h>
+
+// Libera los datos utilizados por un nodo de la lista
+void freeeee(int_ll_t *node)
+{
+    node->data = 0;
+    node->next = NULL;
+    node->prev = NULL;
+}
 
 // Init list structure
 int init_list(int_ll_t *list)
@@ -14,15 +23,15 @@ int init_list(int_ll_t *list)
 // Free list structure
 int free_list(int_ll_t *list)
 {
-    if(list==NULL)
+    if (list == NULL)
         return 1;
     int_ll_t *current = list;
     while (current != NULL)
     {
         int_ll_t *next = current->next;
-        free(current);
+        freeeee(current);
         current = next;
-    }   
+    }
     return 0;
 }
 
@@ -31,30 +40,31 @@ int size_list(int_ll_t *list)
 {
     int count = 0;
     int_ll_t *current = list;
-    while (current!= NULL)
+    while (current != NULL)
     {
         count++;
         current = current->next;
     }
     return count;
-    
 }
 
 // Get element at index
 int index_list(int_ll_t *list, int index, int *out_value)
 {
     int_ll_t *current = list;
-    if(list==NULL) return 1;
-    if(index<=0) 
+    if (list == NULL)
+        return 1;
+    if (index <= 0)
     {
         out_value = current->data;
         return 0;
     }
     int count = 0;
-    while (current!=NULL)
-    {   
+    while (current != NULL)
+    {
         out_value = current->data;
-        if(count == index) break;
+        if (count == index)
+            break;
         count++;
         current = current->next;
     }
@@ -66,13 +76,13 @@ int insert_list(int_ll_t *list, int index, int value)
 {
     int_ll_t *new_node = malloc(sizeof(int_ll_t));
     new_node->data = value;
-    if(list==NULL)
+    if (list == NULL)
     {
         list = new_node;
         return 0;
     }
 
-    if(index<=0)
+    if (index <= 0)
     {
         new_node->next = list;
         list->prev = new_node;
@@ -80,67 +90,67 @@ int insert_list(int_ll_t *list, int index, int value)
 
     int_ll_t *current = list;
     int count = 0;
-    while (current!=NULL)
+    while (current != NULL)
     {
-        if(index == count)
+        if (index == count)
         {
-            if(current->prev!=NULL)
+            if (current->prev != NULL)
             {
                 int_ll_t *previous = current->prev;
                 previous->next = new_node;
                 new_node->prev = previous;
             }
-            
+
             new_node->next = current;
             current->prev = new_node;
             return 0;
         }
 
-        if (current->next==NULL)//legue al final de la lista asi que iserto new_node ahi
+        if (current->next == NULL) // legue al final de la lista asi que iserto new_node ahi
         {
             current->next = new_node;
             new_node->prev = current;
             return 0;
         }
-        
+
         count++;
         current = current->next;
-        
     }
-    //si el indice es mayor o igual que el tamanno de la lista lo inserto en la ultima posicion
-    int_ll_t *previous = current->prev; 
+    // si el indice es mayor o igual que el tamanno de la lista lo inserto en la ultima posicion
+    int_ll_t *previous = current->prev;
     previous->next = new_node;
-    new_node->prev = previous; 
-    return 0;    
+    new_node->prev = previous;
+    return 0;
 }
 
 // Remove element at index
 int remove_list(int_ll_t *list, int index, int *out_value)
 {
-    if(list==NULL) return 1;
+    if (list == NULL)
+        return 1;
 
-    if (index<=0)
+    if (index <= 0)
     {
         out_value = list->data;
         int_ll_t *next = list->next;
         next->prev = NULL;
-        free(list);
+        freeeee(list);
         return 0;
-    }   
-    
+    }
+
     int_ll_t *current = list;
     int count = 0;
-    while (current!=NULL)
+    while (current != NULL)
     {
-        if(count==index)
+        if (count == index)
         {
             out_value = current->data;
-            if(current->prev!=NULL)
+            if (current->prev != NULL)
             {
                 int_ll_t *previous = current->prev;
                 previous->next = NULL;
             }
-            if(current->next!=NULL)
+            if (current->next != NULL)
             {
                 int_ll_t *next = current->next;
                 next->prev = NULL;
@@ -148,7 +158,7 @@ int remove_list(int_ll_t *list, int index, int *out_value)
             free(current);
             return 0;
         }
-        if (current->next==NULL)
+        if (current->next == NULL)
         {
             out_value = current->data;
             int_ll_t *previous = current->prev;
@@ -156,18 +166,11 @@ int remove_list(int_ll_t *list, int index, int *out_value)
             free(current);
             return 0;
         }
-        
+
         count++;
         current = current->next;
     }
     return 0;
-    
 }
 
-//Libera los datos utilizados por un nodo de la lista
-void free(int_ll_t *node)
-{
-    node->data = 0;
-    node->next = NULL;
-    node->prev = NULL;
-}
+
