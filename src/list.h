@@ -13,7 +13,6 @@ typedef struct node
 typedef struct _integer_linked_list_t
 {
     node *head;
-    node *tail;
     int size;
     pthread_mutex_t mutex;
 } int_ll_t;
